@@ -34,6 +34,16 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.CONFLICT, ex.getMessage(), Map.of());
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleUserNotFound(UserNotFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage(), Map.of());
+    }
+
+    @ExceptionHandler(ProfileNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleProfileNotFound(ProfileNotFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage(), Map.of());
+    }
+
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<Map<String, Object>> handleInvalidToken(InvalidTokenException ex) {
         return build(HttpStatus.UNAUTHORIZED, ex.getMessage(), Map.of());

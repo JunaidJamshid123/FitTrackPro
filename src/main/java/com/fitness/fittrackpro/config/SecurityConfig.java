@@ -27,7 +27,7 @@ import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
-@EnableConfigurationProperties(JwtProperties.class)
+@EnableConfigurationProperties({JwtProperties.class, AdminProperties.class})
 @RequiredArgsConstructor
 public class SecurityConfig {
 
