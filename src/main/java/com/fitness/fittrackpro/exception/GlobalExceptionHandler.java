@@ -44,6 +44,11 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.NOT_FOUND, ex.getMessage(), Map.of());
     }
 
+    @ExceptionHandler(ExerciseNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleExerciseNotFound(ExerciseNotFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage(), Map.of());
+    }
+
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<Map<String, Object>> handleInvalidToken(InvalidTokenException ex) {
         return build(HttpStatus.UNAUTHORIZED, ex.getMessage(), Map.of());
