@@ -20,4 +20,5 @@ public record RegisterRequest(
         @NotNull @DecimalMin("20.0") @DecimalMax("400.0") Double weight,
         @NotNull Goal goal
 ) {
+
 }
