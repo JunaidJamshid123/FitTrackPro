@@ -47,6 +47,9 @@ public class ProgressLog {
     /** Hips measurement (cm). */
     private Double hips;
 
+    @Column(length = 500)
+    private String notes;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

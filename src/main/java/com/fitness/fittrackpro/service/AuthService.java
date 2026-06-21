@@ -58,12 +58,13 @@ public class AuthService {
         user.setHeight(req.height());
         user.setWeight(req.weight());
         user.setGoal(req.goal());
-        user.setRole(Role.USER); // self-registration is always USER; admins are promoted manually
+        // If role is specified and is TRAINER or ADMIN, use it; otherwise default to USER
+        user.setRole(req.role() != null && (req.role() == Role.TRAINER || req.role() == Role.ADMIN) ? req.role() : Role.USER);
         user.setEnabled(true);
         user.setAccountNonLocked(true);
 
         user = userRepository.save(user);
-        log.info("Registered new user id={} email={}", user.getId(), user.getEmail());
+        log.info("Registered new user id={} email={} role={}", user.getId(), user.getEmail(), user.getRole());
 
         return issueTokens(user, http);
     }

@@ -2,6 +2,7 @@ package com.fitness.fittrackpro.dto.auth;
 
 import com.fitness.fittrackpro.model.enums.Gender;
 import com.fitness.fittrackpro.model.enums.Goal;
+import com.fitness.fittrackpro.model.enums.Role;
 import jakarta.validation.constraints.*;
 
 public record RegisterRequest(
@@ -18,7 +19,8 @@ public record RegisterRequest(
         @NotNull Gender gender,
         @NotNull @DecimalMin("50.0") @DecimalMax("260.0") Double height,
         @NotNull @DecimalMin("20.0") @DecimalMax("400.0") Double weight,
-        @NotNull Goal goal
+        @NotNull Goal goal,
+        Role role
 ) {
 
 }
