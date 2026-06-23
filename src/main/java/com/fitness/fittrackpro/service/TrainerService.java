@@ -8,6 +8,8 @@ import com.fitness.fittrackpro.exception.UserNotFoundException;
 import com.fitness.fittrackpro.model.Assignment;
 import com.fitness.fittrackpro.model.Trainer;
 import com.fitness.fittrackpro.model.User;
+import com.fitness.fittrackpro.model.enums.Gender;
+import com.fitness.fittrackpro.model.enums.Goal;
 import com.fitness.fittrackpro.model.enums.Role;
 import com.fitness.fittrackpro.repository.AssignmentRepository;
 import com.fitness.fittrackpro.repository.TrainerRepository;
@@ -55,8 +57,10 @@ public class TrainerService {
         // Generate a temporary password (trainer should change it)
         user.setPassword(passwordEncoder.encode("TempPassword123"));
         user.setAge(30); // Default values for trainer user
+        user.setGender(Gender.MALE);
         user.setHeight(170.0);
         user.setWeight(70.0);
+        user.setGoal(Goal.MAINTENANCE);
         user.setRole(Role.TRAINER);
         user.setEnabled(true);
         user.setAccountNonLocked(true);
