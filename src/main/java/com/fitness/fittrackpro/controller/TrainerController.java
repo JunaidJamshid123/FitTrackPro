@@ -1,5 +1,6 @@
 package com.fitness.fittrackpro.controller;
 
+import com.fitness.fittrackpro.dto.trainer.TrainerCreateResponse;
 import com.fitness.fittrackpro.dto.trainer.TrainerRequest;
 import com.fitness.fittrackpro.dto.trainer.TrainerResponse;
 import com.fitness.fittrackpro.dto.trainer.TrainerUserResponse;
@@ -40,7 +41,7 @@ public class TrainerController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<TrainerResponse> create(@Valid @RequestBody TrainerRequest req) {
+    public ResponseEntity<TrainerCreateResponse> create(@Valid @RequestBody TrainerRequest req) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(trainerService.create(req));
     }

@@ -1,5 +1,6 @@
 package com.fitness.fittrackpro.service;
 
+import com.fitness.fittrackpro.dto.trainer.TrainerCreateResponse;
 import com.fitness.fittrackpro.dto.trainer.TrainerRequest;
 import com.fitness.fittrackpro.dto.trainer.TrainerResponse;
 import com.fitness.fittrackpro.dto.trainer.TrainerUserResponse;
@@ -45,7 +46,7 @@ public class TrainerService {
     }
 
     @Transactional
-    public TrainerResponse create(TrainerRequest req) {
+    public TrainerCreateResponse create(TrainerRequest req) {
         String normalizedEmail = normalizeEmail(req.email());
 
         if (trainerRepository.findByEmail(normalizedEmail).isPresent() || userRepository.existsByEmail(normalizedEmail)) {
@@ -55,7 +56,7 @@ public class TrainerService {
         User user = new User();
         user.setName(req.name().trim());
         user.setEmail(normalizedEmail);
-        user.setPassword(passwordEncoder.encode("TempPassword123"));
+        user.setPassword(passwordEncoder.encode(req.password()));
         user.setAge(30);
         user.setGender(Gender.MALE);
         user.setHeight(170.0);
@@ -73,7 +74,7 @@ public class TrainerService {
         trainer.setExperienceYears(req.experienceYears());
         trainer = trainerRepository.save(trainer);
 
-        return TrainerResponse.from(trainer);
+        return TrainerCreateResponse.from(trainer, req.password());
     }
 
     @Transactional
