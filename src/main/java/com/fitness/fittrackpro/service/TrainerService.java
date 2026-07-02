@@ -3,6 +3,7 @@ package com.fitness.fittrackpro.service;
 import com.fitness.fittrackpro.dto.trainer.TrainerRequest;
 import com.fitness.fittrackpro.dto.trainer.TrainerResponse;
 import com.fitness.fittrackpro.dto.trainer.TrainerUserResponse;
+import com.fitness.fittrackpro.exception.EmailAlreadyUsedException;
 import com.fitness.fittrackpro.exception.TrainerNotFoundException;
 import com.fitness.fittrackpro.exception.UserNotFoundException;
 import com.fitness.fittrackpro.model.Assignment;
@@ -45,18 +46,17 @@ public class TrainerService {
 
     @Transactional
     public TrainerResponse create(TrainerRequest req) {
-        // Create Trainer record
-        Trainer trainer = new Trainer();
-        apply(trainer, req);
-        trainer = trainerRepository.save(trainer);
+        String normalizedEmail = normalizeEmail(req.email());
 
-        // Also create corresponding User record with role=TRAINER
+        if (trainerRepository.findByEmail(normalizedEmail).isPresent() || userRepository.existsByEmail(normalizedEmail)) {
+            throw new EmailAlreadyUsedException(normalizedEmail);
+        }
+
         User user = new User();
         user.setName(req.name().trim());
-        user.setEmail(req.email().trim().toLowerCase());
-        // Generate a temporary password (trainer should change it)
+        user.setEmail(normalizedEmail);
         user.setPassword(passwordEncoder.encode("TempPassword123"));
-        user.setAge(30); // Default values for trainer user
+        user.setAge(30);
         user.setGender(Gender.MALE);
         user.setHeight(170.0);
         user.setWeight(70.0);
@@ -64,8 +64,14 @@ public class TrainerService {
         user.setRole(Role.TRAINER);
         user.setEnabled(true);
         user.setAccountNonLocked(true);
-        
-        userRepository.save(user);
+        user = userRepository.save(user);
+
+        Trainer trainer = new Trainer();
+        trainer.setName(req.name().trim());
+        trainer.setEmail(normalizedEmail);
+        trainer.setSpecialization(req.specialization().trim());
+        trainer.setExperienceYears(req.experienceYears());
+        trainer = trainerRepository.save(trainer);
 
         return TrainerResponse.from(trainer);
     }
@@ -120,9 +126,13 @@ public class TrainerService {
 
     private void apply(Trainer trainer, TrainerRequest req) {
         trainer.setName(req.name().trim());
-        trainer.setEmail(req.email().trim());
+        trainer.setEmail(normalizeEmail(req.email()));
         trainer.setSpecialization(req.specialization().trim());
         trainer.setExperienceYears(req.experienceYears());
+    }
+
+    private String normalizeEmail(String email) {
+        return email == null ? null : email.trim().toLowerCase();
     }
 
     private Trainer loadTrainer(Long id) {

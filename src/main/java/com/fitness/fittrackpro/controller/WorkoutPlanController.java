@@ -47,6 +47,7 @@ public class WorkoutPlanController {
     }
 
     @PostMapping
+    
     @PreAuthorize("hasRole('TRAINER') or hasRole('ADMIN')")
     public ResponseEntity<?> create(
             @Valid @RequestBody WorkoutPlanRequest req,
@@ -60,7 +61,7 @@ public class WorkoutPlanController {
             return ResponseEntity.badRequest()
                     .body(Map.of("error", "No trainer profile found for user: " + principal.getUser().getEmail()));
         }
-        
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(workoutPlanService.create(req, trainer));
     }
